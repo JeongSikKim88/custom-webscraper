@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 LIMIT = 50
-URL=f"https://kr.indeed.com/%EC%B7%A8%EC%97%85?as_and=python&limit={LIMIT}"
+URL = f"https://kr.indeed.com/%EC%B7%A8%EC%97%85?as_and=python&limit={LIMIT}"
 
 def get_last_page():
     LIMIT = 50
@@ -55,7 +55,7 @@ def extract_jobs(last_page):
     return jobs
 
 
-def get_jbos():
+def get_jobs():
     last_page = get_last_page()
     jobs = extract_jobs(last_page)
     return jobs
