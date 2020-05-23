@@ -4,12 +4,13 @@ from bs4 import BeautifulSoup
 LIMIT = 50
 URL = f"https://kr.indeed.com/%EC%B7%A8%EC%97%85?as_and=python&limit={LIMIT}"
 
+
 def get_last_page():
     LIMIT = 50
     result = requests.get(URL)
 
     soup = BeautifulSoup(result.text, 'html.parser')
-    pagination = soup.find("div", {"class":"pagination"})
+    pagination = soup.find("div", {"class": "pagination"})
 
     links = pagination.find_all('a')
 
@@ -17,13 +18,14 @@ def get_last_page():
     for link in links[:-1]:
         pages.append(int(link.string))
 
-    max_page=pages[-1]
+    max_page = pages[-1]
 
     return max_page
 
+
 def extract_job(html):
-    title = html.find("h2",{"class":"title"}).find("a")["title"]
-    company = html.find("span", {"class":"company"})
+    title = html.find("h2", {"class": "title"}).find("a")["title"]
+    company = html.find("span", {"class": "company"})
     if company:
         company_achor = company.find("a")
         if company_achor is not None:
@@ -33,7 +35,7 @@ def extract_job(html):
         company = company.strip()
     else:
         company = None
-    location = html.find("div", {"class":"recJobLoc"})["data-rc-loc"]
+    location = html.find("div", {"class": "recJobLoc"})["data-rc-loc"]
     job_id = html["data-jk"]
     return {
         'title': title,
@@ -42,13 +44,14 @@ def extract_job(html):
         'link': f"https://kr.indeed.com/%EC%B1%84%EC%9A%A9%EB%B3%B4%EA%B8%B0?jk={job_id}"
     }
 
+
 def extract_jobs(last_page):
-    jobs=[]
+    jobs = []
     for page in range(last_page):
         print(f"Scrapping page {page}")
         result = requests.get(f"{URL}&start={page*LIMIT}")
         soup = BeautifulSoup(result.text, 'html.parser')
-        results = soup.find_all("div", {"class":"jobsearch-SerpJobCard"})
+        results = soup.find_all("div", {"class": "jobsearch-SerpJobCard"})
         for result in results:
             job = extract_job(result)
             jobs.append(job)
